@@ -19,7 +19,6 @@ contract StarChamberDAO is ERC721Enumerable, Ownable {
   address[] public whitelistedAddresses;
   mapping(address => uint256) public addressMintedBalance;
 
-
   constructor(
     string memory _name,
     string memory _symbol,
@@ -149,7 +148,6 @@ contract StarChamberDAO is ERC721Enumerable, Ownable {
     require(success);
   }
 }
-
 
 /**
 ["0xfAD941DC8cb86eCC112E717AE3EC38b3023e4c4C",
