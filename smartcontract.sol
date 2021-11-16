@@ -1,4 +1,4 @@
-pragma solidity >=0.7.0 <0.9.0;
+pragma solidity >=0.8.0 <0.9.0;
 
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -40,7 +40,7 @@ contract StarChamberDAO is ERC721Enumerable, Ownable {
     uint256 supply = totalSupply();
     require(_mintAmount > 0, "You must mint at least 1 NFT.");
     require(_mintAmount <= maxMintAmount, "You are attempting to mint more than the maximum per user allocation.");
-    require(supply + _mintAmount <= maxSupply, "You have exceeded your total allocation.");
+    require(supply + _mintAmount <= maxSupply, "Required amount will surpass token max supply");
 
     if (msg.sender != owner()) {
         if (onlyWhitelisted == true) {
