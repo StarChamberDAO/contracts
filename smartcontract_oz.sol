@@ -51,6 +51,7 @@ contract StarChamberDAO is Initializable, ERC721Upgradeable, ERC721EnumerableUpg
     }
     
 // Fix all these onlyOwners to the Gnosis multi-sig    
+// Add whitelist functions, add name , total supply etc public viewers
     
     function withdraw() public payable onlyOwner {
         (bool success, ) = payable(msg.sender).call{value: address(this).balance}("");
