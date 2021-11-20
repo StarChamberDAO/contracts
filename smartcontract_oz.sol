@@ -52,7 +52,7 @@ contract StarChamberDAO is Initializable, ERC721Upgradeable, ERC721EnumerableUpg
   
     
     /// Internal
-   function _baseURI() internal pure override returns (string memory) {
+    function _baseURI() internal view override returns (string memory) {
         return baseURI;
     }
     
