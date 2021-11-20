@@ -47,7 +47,6 @@ contract StarChamberDAO is Initializable, ERC721Upgradeable, ERC721EnumerableUpg
          setBaseURI(_initBaseURI);
          setNotRevealedURI(_initNotRevealedUri);
         }
-    }
     
     /// Internal
 
@@ -57,7 +56,7 @@ contract StarChamberDAO is Initializable, ERC721Upgradeable, ERC721EnumerableUpg
     
   /// Public
   function mint(uint256 _mintAmount) public payable {
-    require(!paused, "Minting has paused.");
+    require(_paused, "Minting has paused");
     uint256 supply = totalSupply();
     require(_mintAmount > 0, "You must mint at least 1 NFT.");
     require(_mintAmount <= maxMintAmount, "You are attempting to mint more than the maximum per user allocation.");
@@ -184,8 +183,5 @@ contract StarChamberDAO is Initializable, ERC721Upgradeable, ERC721EnumerableUpg
         returns (bool)
     {
         return super.supportsInterface(interfaceId);
-    }
+    } 
 }
-
-    
-// Fix all these onlyOwners to the Gnosis multi-sig    
