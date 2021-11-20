@@ -52,7 +52,6 @@ contract StarChamberDAO is Initializable, ERC721Upgradeable, ERC721EnumerableUpg
   
     
     /// Internal
-
    function _baseURI() internal pure override returns (string memory) {
         return baseURI;
     }
@@ -153,10 +152,14 @@ contract StarChamberDAO is Initializable, ERC721Upgradeable, ERC721EnumerableUpg
     baseExtension = _newBaseExtension;
   }
 
-  function pause(bool _state) public onlyOwner {
-    paused = _state;
+  function pause() public onlyOwner {
+      _pause();
   }
- 
+  
+  function unpause() public onlyOwner {
+      _unpause();
+  }
+    
   function setOnlyWhitelisted(bool _state) public onlyOwner {
     onlyWhitelisted = _state;
   }  
