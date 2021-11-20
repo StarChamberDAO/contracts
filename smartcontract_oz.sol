@@ -43,10 +43,11 @@ contract StarChamberDAO is Initializable, ERC721Upgradeable, ERC721EnumerableUpg
         string memory _symbol;
         string memory _initBaseURI;
         string memory _initNotRevealedUri;
-         __ERC721_init("_name, _symbol");
+         __ERC721_init(_name, _symbol);
          setBaseURI(_initBaseURI);
          setNotRevealedURI(_initNotRevealedUri);
         }
+  
     
     /// Internal
 
