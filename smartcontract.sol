@@ -1517,28 +1517,25 @@ contract SCDAO is ERC721Enumerable, Ownable {
             for (uint256 i = 0; i < numberOfTokens; i++) {
                 uint256 tokenId = _publicSCDAO.current();
     
-                if (_publicSCDAO.current() < maxTokens) {
+                if (_publicSCDAO.current() <= maxTokens) {
                     _publicSCDAO.increment();
                     _mint(msg.sender, tokenId);
                 }
             }
     }
-   
+ 
     // Allow White Listed users to mint if Pre-sale state is set.
     function purchaseWhiteList(uint256 numberOfTokens) external payable {
-        require(numberOfTokens <= PURCHASE_LIMIT, "Error: The maximum NFT's per wallet is 2.");
-        require(balanceOf(msg.sender) < 2, "Error: The maximum NFT's per wallet is 2.");
         require(saleState != State.NoSale, "Error: Presale is not active.");
+        require(balanceOf(msg.sender) < PURCHASE_LIMIT, "Error: The maximum NFT's per wallet is 2.");
         require(_WhiteList[msg.sender], "Error: Current address is not White Listed.");
-        require(_publicSCDAO.current() < maxTokens, "Error: Purchase would exceed the total supply.");
-        require(numberOfTokens <= WhiteListMaxMint, "Error: The maximum White List allocation is 2.");
         require(_WhiteListClaimed[msg.sender] + numberOfTokens <= WhiteListMaxMint, "Error: The maximum White List allocation is 2.");
         require(PRICE * numberOfTokens <= msg.value, "Error: Submited ETH amount is insufficient.");
-        require(_publicSCDAO.current() < maxTokens, "Error: Purchase would exceed the total supply.");
+
         for (uint256 i = 0; i < numberOfTokens; i++) {
             uint256 tokenId = _publicSCDAO.current();
 
-            if (_publicSCDAO.current() < maxTokens) {
+            if (_publicSCDAO.current() <= maxTokens) {
                 _publicSCDAO.increment();
                 _mint(msg.sender, tokenId);
             }
@@ -1547,16 +1544,15 @@ contract SCDAO is ERC721Enumerable, Ownable {
 
     // Allow general public to mint if Public Sale state is set.
     function purchase(uint256 numberOfTokens) external payable {
-        require(saleState == State.PublicSale, "Error: Public sale is not active."); 
-        require(balanceOf(msg.sender) < 2, "Error: The maximum NFT's per wallet is 2.");
-        require(numberOfTokens <= PURCHASE_LIMIT, "Error: The maximum NFT's per wallet is 2.");
-        require(_publicSCDAO.current() < maxTokens, "Error: Purchase would exceed the total supply.");
-        require(PRICE * numberOfTokens <= msg.value, "Error: Submited ETH amount is insufficient.");
+        require(saleState == State.PublicSale, "Error: Public sale is not active.");
+        require(balanceOf(msg.sender) < PURCHASE_LIMIT, "Error: The maximum NFT's per wallet is 2.");              
+        require(numberOfTokens <= PublicSaleMaxMint, "Error: The maximum Public Sale allocation per transaction is 1.");
+        require(PRICE * numberOfTokens <= msg.value, "Error: Submited ETH amount is insufficient.");          
         
         for (uint256 i = 0; i < numberOfTokens; i++) {
             uint256 tokenId = _publicSCDAO.current();
 
-            if (_publicSCDAO.current() < maxTokens) {
+            if (_publicSCDAO.current() <= maxTokens) {
                 _publicSCDAO.increment();
                 _mint(msg.sender, tokenId);
             }
