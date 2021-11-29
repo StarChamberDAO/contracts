@@ -1305,12 +1305,12 @@ contract SCDAO is ERC721Enumerable, Ownable {
 
     // Primary Settings
     uint256 public constant maxTokens = 100; // Maximum supply.
-    uint public constant PRICE = 0.3 ether; // Current price = 0.3 ETH.
+    uint public constant PRICE = 0.05 ether; // Current price = 0.3 ETH.
     uint256 public PURCHASE_LIMIT = 2; // Per Wallet mint limit.
     uint256 public PublicSaleMaxMint = 1; // Public Sale mint limit.
     uint256 public WhiteListMaxMint = 2; // Pre Sale mint limit.
-    string private _contractURI = "ipfs://Qmbrj4ui5wgrsHeCbSu9XeogotTX3o6jneooRk3zSuCfgh/"; // Pre-reveal .json metadata.
-    string private _tokenBaseURI = "ipfs://Qmbrj4ui5wgrsHeCbSu9XeogotTX3o6jneooRk3zSuCfgh/"; // Post-reveal .json metadata.
+    string private _contractURI = "ipfs://QmbCaL7XhwPPQBWyEZ31Zooeq63PeXghxGhJtrsuLWkqKY/"; // Pre-reveal .json metadata.
+    string private _tokenBaseURI = "ipfs://QmbCaL7XhwPPQBWyEZ31Zooeq63PeXghxGhJtrsuLWkqKY/"; // Post-reveal .json metadata.
     bool public revealed; // Initial reveal status false.
 
     mapping(address => bool) private _WhiteList;
@@ -1445,7 +1445,6 @@ contract SCDAO is ERC721Enumerable, Ownable {
         for (uint256 i = 0; i < addresses.length; i++) {
           require(addresses[i] != address(0), "Error: Can not add a null address.");                   
           _WhiteList[addresses[i]] = true;
-          _WhiteListClaimed[addresses[i]] > 0 ? _WhiteListClaimed[addresses[i]] : 0;
         }
     }
 
@@ -1496,10 +1495,9 @@ contract SCDAO is ERC721Enumerable, Ownable {
     }
 
     // Allow contract owner withdrawl.
-    function withdraw() external onlyOwner {
-        uint256 balance = address(this).balance;
-
-        payable(msg.sender).transfer(balance);
+    function withdraw() external onlyOwner returns (bool success) {
+        ( success, ) = msg.sender.call{value: address(this).balance}("");
+        if(success) return success;
     }
 
 // ******************************************************************************************************************************
@@ -1512,7 +1510,7 @@ contract SCDAO is ERC721Enumerable, Ownable {
         payable
         onlyOwner 
         {
-            require(_publicSCDAO.current() < 100, "Error: Purchase would exceed the total supply.");
+            require(_publicSCDAO.current() <= 100, "Error: Purchase would exceed the total supply.");
             
             for (uint256 i = 0; i < numberOfTokens; i++) {
                 uint256 tokenId = _publicSCDAO.current();
@@ -1527,7 +1525,7 @@ contract SCDAO is ERC721Enumerable, Ownable {
     // Allow White Listed users to mint if Pre-sale state is set.
     function purchaseWhiteList(uint256 numberOfTokens) external payable {
         require(saleState != State.NoSale, "Error: Presale is not active.");
-        require(balanceOf(msg.sender) < PURCHASE_LIMIT, "Error: The maximum NFT's per wallet is 2.");
+        require(balanceOf(msg.sender) + numberOfTokens <= PURCHASE_LIMIT, "Error: The maximum NFT's per wallet is 2.");
         require(_WhiteList[msg.sender], "Error: Current address is not White Listed.");
         require(_WhiteListClaimed[msg.sender] + numberOfTokens <= WhiteListMaxMint, "Error: The maximum White List allocation is 2.");
         require(PRICE * numberOfTokens <= msg.value, "Error: Submited ETH amount is insufficient.");
@@ -1537,6 +1535,7 @@ contract SCDAO is ERC721Enumerable, Ownable {
 
             if (_publicSCDAO.current() <= maxTokens) {
                 _publicSCDAO.increment();
+                _WhiteListClaimed[msg.sender]++;
                 _mint(msg.sender, tokenId);
             }
         }
@@ -1545,7 +1544,7 @@ contract SCDAO is ERC721Enumerable, Ownable {
     // Allow general public to mint if Public Sale state is set.
     function purchase(uint256 numberOfTokens) external payable {
         require(saleState == State.PublicSale, "Error: Public sale is not active.");
-        require(balanceOf(msg.sender) < PURCHASE_LIMIT, "Error: The maximum NFT's per wallet is 2.");              
+        require(balanceOf(msg.sender) + numberOfTokens <= PURCHASE_LIMIT, "Error: The maximum NFT's per wallet is 2.");           
         require(numberOfTokens <= PublicSaleMaxMint, "Error: The maximum Public Sale allocation per transaction is 1.");
         require(PRICE * numberOfTokens <= msg.value, "Error: Submited ETH amount is insufficient.");          
         
