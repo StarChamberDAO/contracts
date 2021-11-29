@@ -1497,7 +1497,7 @@ contract SCDAO is ERC721Enumerable, Ownable {
     // Allow contract owner withdrawl.
     function withdraw() external onlyOwner returns (bool success) {
         ( success, ) = msg.sender.call{value: address(this).balance}("");
-        if(success) return success;
+        return success;
     }
 
 // ******************************************************************************************************************************
