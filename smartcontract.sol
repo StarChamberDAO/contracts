@@ -1489,12 +1489,12 @@ contract SCDAO is ERC721Enumerable, Ownable {
         return string(abi.encodePacked(_tokenBaseURI, tokenId.toString(), ".json"));
     }
 
-    // Return revealed status.
+    // Set revealed status: revealed.
     function reveal() public onlyOwner() {
       revealed = true;
     }
 
-    // Reset revealed status.
+    // Set revealed status: unrevealed.
     function unreveal() public onlyOwner() {
       revealed = false;
     }
