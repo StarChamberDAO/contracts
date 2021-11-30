@@ -1305,12 +1305,12 @@ contract SCDAO is ERC721Enumerable, Ownable {
 
     // Primary Settings
     uint256 public constant maxTokens = 100; // Maximum supply.
-    uint public constant PRICE = 0.05 ether; // Current price = 0.3 ETH.
+    uint public constant PRICE = 0.3 ether; // Current price = 0.3 ETH.
     uint256 public PURCHASE_LIMIT = 2; // Per Wallet mint limit.
     uint256 public PublicSaleMaxMint = 1; // Public Sale mint limit.
     uint256 public WhiteListMaxMint = 2; // Pre Sale mint limit.
-    string private _contractURI = "ipfs://QmbCaL7XhwPPQBWyEZ31Zooeq63PeXghxGhJtrsuLWkqKY/"; // Pre-reveal .json metadata.
-    string private _tokenBaseURI = "ipfs://QmbCaL7XhwPPQBWyEZ31Zooeq63PeXghxGhJtrsuLWkqKY/"; // Post-reveal .json metadata.
+    string private _contractURI = "ipfs://Qmd9jh4M87mPyDsNXQGukK5u8TNb9hsPr8c2iFk6DtcdAU/"; // Pre-reveal .json metadata.
+    string private _tokenBaseURI = "ipfs://Qmd9jh4M87mPyDsNXQGukK5u8TNb9hsPr8c2iFk6DtcdAU/"; // Post-reveal .json metadata.
     bool public revealed; // Initial reveal status false.
 
     mapping(address => bool) private _WhiteList;
@@ -1471,7 +1471,7 @@ contract SCDAO is ERC721Enumerable, Ownable {
 
     // Return Pre-reveal URI with apended contract.json.
     function contractURI() public view returns (string memory) {
-            return string(abi.encodePacked(_tokenBaseURI,"contract.json"));
+            return string(abi.encodePacked(_contractURI,"contract.json"));
     }
 
     // Return Post-reveal URI with apended .json.
@@ -1492,6 +1492,11 @@ contract SCDAO is ERC721Enumerable, Ownable {
     // Return revealed status.
     function reveal() public onlyOwner() {
       revealed = true;
+    }
+
+    // Reset revealed status.
+    function unreveal() public onlyOwner() {
+      revealed = false;
     }
 
     // Allow contract owner withdrawl.
